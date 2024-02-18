@@ -2,12 +2,12 @@ import * as Plot from "npm:@observablehq/plot";
 import * as d3 from "npm:d3";
 // import {dy} from "./apiHeatmap.js";
 
-const dy = 500; // number of rows
+const dy = 300; // number of rows
 const marginTop = 0;
 const marginRight = 20;
 const marginBottom = 30;
 const marginLeft = 20;
-
+const barWidth = 4;
 const canvasCache = new WeakSet();
 
 export function ApiHistogram(
@@ -16,7 +16,7 @@ export function ApiHistogram(
   category,
   {canvas = document.createElement("canvas"), color, width, height = 360, label, y1, y2}
 ) {
-  const ky = 165; // number of requests per pixel
+  const ky = 6; // number of requests per pixel
 
   const plot = Plot.plot({
     figure: true,
@@ -65,11 +65,13 @@ export function ApiHistogram(
           const y0 = plot.scale("y").apply(sum);
           const y1 = plot.scale("y").apply((sum += currentCount));
           context.fillStyle = color.apply(currentCategory);
-          context.fillRect(j, y1, 1, y0 - y1);
+        //   console.log(context.fillStyle, currentCategory);
+          context.fillRect(j, y1, barWidth, y0 - y1);
         }
       }
       if (j2 < dy) requestAnimationFrame(() => tick(i, j2, j2 + (j2 - j1)));
     };
+    
 
     const context = canvas.getContext("2d");
     requestAnimationFrame(() => tick(0, 0, 20));

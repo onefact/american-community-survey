@@ -46,7 +46,7 @@ toc: false
 
 <div class="hero">
   <h1>Hello, America</h1>
-  <h2>Welcome to your Census data! Edit&nbsp;<code style="font-size: 90%;">docs/index.md</code> to change this page.</h2>
+  <h2>Welcome to your Census data! Edit&nbsp;<code style="font-size: 90%;">docs/index.md</code> to change this pindustry.</h2>
   <a href="https://github.com/jaanli/exploring_american_community_survey_data/" target="_blank">80% of visualization is data processing; learn how this data was processed from the Census Bureau!<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
 </div>
 
@@ -75,29 +75,28 @@ const routeSwatch = (route) => html`<span style="white-space: nowrap;"><svg widt
 ```
 
 ```js
-const incomeData = FileAttachment("data/income-histogram.parquet").parquet();
+const incomeHistogram = FileAttachment("data/income-histogram.parquet").parquet();
 const histogramCanvas = document.createElement("canvas");
 ```
 
-
 ```js
-// Assuming modification for categorization based on age
-const ageColorMapping = d3.sort(d3.rollups(incomeData.getChild("age"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([age, count]) => ({age, count}));
-const ageColor = Object.assign(Plot.scale({color: {domain: ageColorMapping.map((d) => d.age.toString())}}), {label: "age"});
-const ageSwatch = (age) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${ageColor.apply(age.toString())}><rect width=10 height=10></rect></svg> <span class="small">${age}</span></span>`;
+// Assuming modification for categorization based on industry
+const industryColorMapping = d3.sort(d3.rollups(incomeHistogram.getChild("industry"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([industry, count]) => ({industry, count}));
+const industryColor = Object.assign(Plot.scale({color: {domain: industryColorMapping.map((d) => d.industry)}}), {label: "industry"});
+const industrySwatch = (industry) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${industryColor.apply(industry)}><rect width=10 height=10></rect></svg> <span class="small">${industry}</span></span>`;
 ```
 
 
-<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
+<!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;"> -->
   <div class="card">
-    <h2>Income Distribution by Age</h2>
-    ${resize((width) => ApiHistogram(incomeData.getChild("income"), incomeData.getChild("count"), incomeData.getChild("age"), {canvas: histogramCanvas, color: ageColor, width, label: "Income ($)", y1: 0.5, y2: 100_000}))}
+    <h2>Income distribution by industry</h2>
+    ${resize((width) => ApiHistogram(incomeHistogram.getChild("income"), incomeHistogram.getChild("count"), incomeHistogram.getChild("industry"), {canvas: histogramCanvas, color: industryColor, width, label: "Income ($)", y1: 1_000, y2: 200_000}))}
   </div>
-  <div class="card">
+  <!-- <div class="card">
     <h2>Response latency histogram</h2>
     ${resize((width) => ApiHistogram(latencyHistogram.getChild("duration"), latencyHistogram.getChild("count"), latencyHistogram.getChild("route"), {canvas: histogramCanvas_new, color: routeColor, width, label: "Duration (ms)", y1: 0.5, y2: 10_000}))}
-  </div>
-</div>
+  </div> -->
+<!-- </div> -->
 
 ---
 <!-- 
@@ -110,7 +109,7 @@ Here are some ideas of things you could try…
     Chart your own data using <a href="https://observablehq.com/framework/lib/plot"><code>Plot</code></a> and <a href="https://observablehq.com/framework/javascript/files"><code>FileAttachment</code></a>. Make it responsive using <a href="https://observablehq.com/framework/javascript/display#responsive-display"><code>resize</code></a>.
   </div>
   <div class="card">
-    Create a <a href="https://observablehq.com/framework/routing">new page</a> by adding a Markdown file (<code>whatever.md</code>) to the <code>docs</code> folder.
+    Create a <a href="https://observablehq.com/framework/routing">new pindustry</a> by adding a Markdown file (<code>whatever.md</code>) to the <code>docs</code> folder.
   </div>
   <div class="card">
     Add a drop-down menu using <a href="https://observablehq.com/framework/javascript/inputs"><code>Inputs.select</code></a> and use it to filter the data shown in a chart.
