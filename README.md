@@ -53,3 +53,7 @@ A typical Framework project looks like this:
 | `yarn deploy`     | Deploy your project to Observable                        |
 | `yarn clean`      | Clear the local data loader cache                        |
 | `yarn observable` | Run commands like `observable help`                      |
+
+## GPT-4 reference
+
+https://chat.openai.com/share/0284945f-996d-4e62-85c5-bdc0f4e68e18

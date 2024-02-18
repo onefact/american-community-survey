@@ -65,7 +65,7 @@ const latencyByRouteCanvas = document.createElement("canvas");
 
 ```js
 const latencyHistogram = FileAttachment("data/latency-histogram.parquet").parquet();
-const histogramCanvas = document.createElement("canvas");
+const histogramCanvas_new = document.createElement("canvas");
 ```
 
 ```js
@@ -74,30 +74,33 @@ const routeColor = Object.assign(Plot.scale({color: {domain: topRoutesPixel.map(
 const routeSwatch = (route) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${routeColor.apply(route)}><rect width=10 height=10></rect></svg> <span class="small">${route}</span></span>`;
 ```
 
-<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
+```js
+const incomeData = FileAttachment("data/income-histogram.parquet").parquet();
+const histogramCanvas = document.createElement("canvas");
+```
 
+
+```js
+// Assuming modification for categorization based on age
+const ageColorMapping = d3.sort(d3.rollups(incomeData.getChild("age"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([age, count]) => ({age, count}));
+const ageColor = Object.assign(Plot.scale({color: {domain: ageColorMapping.map((d) => d.age.toString())}}), {label: "age"});
+const ageSwatch = (age) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${ageColor.apply(age.toString())}><rect width=10 height=10></rect></svg> <span class="small">${age}</span></span>`;
+```
+
+
+<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
+  <div class="card">
+    <h2>Income Distribution by Age</h2>
+    ${resize((width) => ApiHistogram(incomeData.getChild("income"), incomeData.getChild("count"), incomeData.getChild("age"), {canvas: histogramCanvas, color: ageColor, width, label: "Income ($)", y1: 0.5, y2: 100_000}))}
+  </div>
   <div class="card">
     <h2>Response latency histogram</h2>
-    ${resize((width) => ApiHistogram(latencyHistogram.getChild("duration"), latencyHistogram.getChild("count"), latencyHistogram.getChild("route"), {canvas: histogramCanvas, color: routeColor, width, label: "Duration (ms)", y1: 0.5, y2: 10_000}))}
+    ${resize((width) => ApiHistogram(latencyHistogram.getChild("duration"), latencyHistogram.getChild("count"), latencyHistogram.getChild("route"), {canvas: histogramCanvas_new, color: routeColor, width, label: "Duration (ms)", y1: 0.5, y2: 10_000}))}
   </div>
-  <div class="card">${
-    resize((width) => Plot.plot({
-      title: "How big are penguins, anyway? 🐧",
-      width,
-      grid: true,
-      x: {label: "Body mass (g)"},
-      y: {label: "Flipper length (mm)"},
-      color: {legend: true},
-      marks: [
-        Plot.linearRegressionY(penguins, {x: "body_mass_g", y: "flipper_length_mm", stroke: "species"}),
-        Plot.dot(penguins, {x: "body_mass_g", y: "flipper_length_mm", stroke: "species", tip: true})
-      ]
-    }))
-  }</div>
 </div>
 
 ---
-
+<!-- 
 ## Next steps
 
 Here are some ideas of things you could try…
@@ -124,4 +127,4 @@ Here are some ideas of things you could try…
   <div class="card">
     Visit <a href="https://github.com/observablehq/framework">Framework on GitHub</a> and give us a star. Or file an issue if you’ve found a bug!
   </div>
-</div>
+</div> -->
