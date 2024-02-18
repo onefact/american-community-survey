@@ -71,13 +71,26 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # - run: mkdir dist/examples && for i in examples/*; do if [ -d $i/dist ]; then mv -v $i/dist dist/examples/$(basename $i); fi; done
-      - uses: cloudflare/pages-action@1
+      
+      # Optional: Add any other steps required to build your project here
+      # This might include building examples, preprocessing data, etc.
+      
+      - name: Upload build artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: framework
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          path: dist
+          # Specify the path to your build directory
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        if: github.ref == 'refs/heads/main'
+      # - uses: cloudflare/pages-action@1
+      #   with:
+      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      #     projectName: framework
+      #     directory: dist
+      #     gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       # TODO: This doesn't include the examples. How can we fix that?
       # TODO: Re-enable deploy to Observable
       # - name: Deploy to Observable
