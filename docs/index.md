@@ -45,24 +45,41 @@ toc: false
 </style>
 
 <div class="hero">
-  <h1>Hello, Observable Framework</h1>
-  <h2>Welcome to your new project! Edit&nbsp;<code style="font-size: 90%;">docs/index.md</code> to change this page.</h2>
-  <a href="https://observablehq.com/framework/getting-started" target="_blank">Get started<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <h1>Hello, America</h1>
+  <h2>Welcome to your Census data! Edit&nbsp;<code style="font-size: 90%;">docs/index.md</code> to change this page.</h2>
+  <a href="https://github.com/jaanli/exploring_american_community_survey_data/" target="_blank">80% of visualization is data processing; learn how this data was processed from the Census Bureau!<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
 </div>
 
+
+```js
+import "npm:apache-arrow";
+import "npm:parquet-wasm/esm/arrow1.js";
+import {ApiHeatmap} from "./components/apiHistogram.js";
+import {ApiHistogram} from "./components/apiHistogram.js";
+```
+
+```js
+const latencyHeatmap = FileAttachment("data/latency-heatmap.parquet").parquet();
+const latencyByRouteCanvas = document.createElement("canvas");
+```
+
+```js
+const latencyHistogram = FileAttachment("data/latency-histogram.parquet").parquet();
+const histogramCanvas = document.createElement("canvas");
+```
+
+```js
+const topRoutesPixel = d3.sort(d3.rollups(latencyHeatmap.getChild("route"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([route, count]) => ({route, count}));
+const routeColor = Object.assign(Plot.scale({color: {domain: topRoutesPixel.map((d) => d.route)}}), {label: "route"});
+const routeSwatch = (route) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${routeColor.apply(route)}><rect width=10 height=10></rect></svg> <span class="small">${route}</span></span>`;
+```
+
 <div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
-  <div class="card">${
-    resize((width) => Plot.plot({
-      title: "Your awesomeness over time 🚀",
-      subtitle: "Up and to the right!",
-      width,
-      y: {grid: true, label: "Awesomeness"},
-      marks: [
-        Plot.ruleY([0]),
-        Plot.lineY(aapl, {x: "Date", y: "Close", tip: true})
-      ]
-    }))
-  }</div>
+
+  <div class="card">
+    <h2>Response latency histogram</h2>
+    ${resize((width) => ApiHistogram(latencyHistogram.getChild("duration"), latencyHistogram.getChild("count"), latencyHistogram.getChild("route"), {canvas: histogramCanvas, color: routeColor, width, label: "Duration (ms)", y1: 0.5, y2: 10_000}))}
+  </div>
   <div class="card">${
     resize((width) => Plot.plot({
       title: "How big are penguins, anyway? 🐧",
