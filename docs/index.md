@@ -45,8 +45,8 @@ toc: false
 </style>
 
 <div class="hero">
-  <h1>Hello, America</h1>
-  <h2>Welcome to your Census data! Edit&nbsp;<code style="font-size: 90%;">docs/index.md</code> to change this pindustry.</h2>
+  <h1>American Community Survey</h1>
+  <h2>This is a testbed of visualizing the Census Bureau's American Community Survey data from 2022.  Read about the data &nbsp;<a href="https://www.census.gov/programs-surveys/acs/data.html"><code style="font-size: 90%;">here</code></a> or see how these visualizations were generated <a href="https://github.com/jaanli/american-community-survey/"><code style="font-size: 90%;">on GitHub</code></a>.</h2>
   <a href="https://github.com/jaanli/exploring_american_community_survey_data/" target="_blank">80% of visualization is data processing; learn how this data was processed from the Census Bureau!<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
 </div>
 
