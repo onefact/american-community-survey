@@ -13,6 +13,7 @@ jobs:
       deployments: write
       id-token: write
       packages: read
+      pages: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
