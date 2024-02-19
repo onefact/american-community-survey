@@ -87,13 +87,13 @@ function rentChart(rent, width) {
 }
 ```
 
-<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
-  <div class="card">
-    <h2>Income distribution by sector (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/income-histogram-with-sector.sql">code</a> for data transform)</h2>
-    ${resize((width) => incomeChart(income, width))}
-  </div>
-  <div class="card">
-    <h2>Rent Distribution by Region (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/household-histogram-with-region.sql">code</a> for data transform)</h2>
-    ${resize((width) => rentChart(rent, width))}
-  </div>
+<!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;"> -->
+<div class="card">
+  <h2>Income distribution by sector (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/income-histogram-with-sector.sql">code</a> for data transform)</h2>
+  ${resize((width) => incomeChart(income, width))}
 </div>
+<div class="card">
+  <h2>Rent Distribution by Region (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/household-histogram-with-region.sql">code</a> for data transform)</h2>
+  ${resize((width) => rentChart(rent, width))}
+</div>
+<!-- </div> -->
