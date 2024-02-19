@@ -1,6 +1,14 @@
-# American Community Survey
+# Visualizing American Community Survey data
 
-American Community Survey data on people and households
+Visualizing American Community Survey data on people and households from the Census Bureau.
+
+Example visualization:
+* Demo: https://jaanli.github.io/american-community-survey/
+
+Screenshot:
+
+<img width="977" alt="image" src="https://github.com/jaanli/american-community-survey/assets/5317244/b6c23933-fc08-4e02-a989-2b827b8f284f">
+
 
 This is an [Observable Framework](https://observablehq.com/framework) project. To start the local preview server, run:
 
