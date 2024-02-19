@@ -46,33 +46,17 @@ toc: false
 
 <div class="hero">
   <h1>American Community Survey</h1>
-  <h2>This is a testbed of visualizing the Census Bureau's American Community Survey data from 2022.  Read about the data &nbsp;<a href="https://www.census.gov/programs-surveys/acs/data.html"><code style="font-size: 90%;">here</code></a> or see how these visualizations were generated <a href="https://github.com/jaanli/american-community-survey/"><code style="font-size: 90%;">on GitHub</code></a>.</h2>
-  <a href="https://github.com/jaanli/exploring_american_community_survey_data/" target="_blank">80% of visualization is data processing; learn how this data was processed from the Census Bureau!<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <h2>This is a testbed of visualizing the Census Bureau's American Community Survey data from 2022.  Read about the data &nbsp;<a href="https://www.census.gov/programs-surveys/acs/data.html"><code style="font-size: 90%;">here</code></a> or see how these visualizations were generated <a href="https://github.com/jaanli/american-community-survey/"><code style="font-size: 90%;">on GitHub</code></a>. Ping me on <a href="https://twitter.com/thejaan">Twitter</a> or <a href="mailto:jaan.li@jaan.li">email</a> if you have ideas for <a href="https://github.com/jaanli/exploring_american_community_survey_data/tree/main?tab=readme-ov-file#types-of-data-available-for-every-person-who-responded-to-the-american-community-survey">what other variables</a> in the census to look at or how else to display these millions of datapoints!</h2>
+  <a href="https://github.com/jaanli/exploring_american_community_survey_data/" target="_blank">80% of visualization is data processing; learn how this data was processed here!<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
 </div>
 
 
 ```js
 import "npm:apache-arrow";
 import "npm:parquet-wasm/esm/arrow1.js";
-import {ApiHeatmap} from "./components/apiHistogram.js";
 import {ApiHistogram} from "./components/apiHistogram.js";
 ```
 
-```js
-const latencyHeatmap = FileAttachment("data/latency-heatmap.parquet").parquet();
-const latencyByRouteCanvas = document.createElement("canvas");
-```
-
-```js
-const latencyHistogram = FileAttachment("data/latency-histogram.parquet").parquet();
-const histogramCanvas_new = document.createElement("canvas");
-```
-
-```js
-const topRoutesPixel = d3.sort(d3.rollups(latencyHeatmap.getChild("route"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([route, count]) => ({route, count}));
-const routeColor = Object.assign(Plot.scale({color: {domain: topRoutesPixel.map((d) => d.route)}}), {label: "route"});
-const routeSwatch = (route) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${routeColor.apply(route)}><rect width=10 height=10></rect></svg> <span class="small">${route}</span></span>`;
-```
 
 ```js
 const incomeHistogram = FileAttachment("data/income-histogram.parquet").parquet();
@@ -80,17 +64,17 @@ const histogramCanvas = document.createElement("canvas");
 ```
 
 ```js
-// Assuming modification for categorization based on industry
-const industryColorMapping = d3.sort(d3.rollups(incomeHistogram.getChild("industry"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([industry, count]) => ({industry, count}));
-const industryColor = Object.assign(Plot.scale({color: {domain: industryColorMapping.map((d) => d.industry)}}), {label: "industry"});
-const industrySwatch = (industry) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${industryColor.apply(industry)}><rect width=10 height=10></rect></svg> <span class="small">${industry}</span></span>`;
+// Assuming modification for categorization based on sector
+const sectorColorMapping = d3.sort(d3.rollups(incomeHistogram.getChild("sector"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([sector, count]) => ({sector, count}));
+const sectorColor = Object.assign(Plot.scale({color: {domain: sectorColorMapping.map((d) => d.sector)}}), {label: "sector"});
+const sectorSwatch = (sector) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${sectorColor.apply(sector)}><rect width=10 height=10></rect></svg> <span class="small">${sector}</span></span>`;
 ```
 
 
 <!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;"> -->
   <div class="card">
-    <h2>Income distribution by industry</h2>
-    ${resize((width) => ApiHistogram(incomeHistogram.getChild("income"), incomeHistogram.getChild("count"), incomeHistogram.getChild("industry"), {canvas: histogramCanvas, color: industryColor, width, label: "Income ($)", y1: 1_000, y2: 200_000}))}
+    <h2>Income distribution by sector</h2>
+    ${resize((width) => ApiHistogram(incomeHistogram.getChild("income"), incomeHistogram.getChild("count"), incomeHistogram.getChild("sector"), {canvas: histogramCanvas, color: sectorColor, width, label: "Income ($)", y1: 1_000, y2: 200_000}))}
   </div>
   <!-- <div class="card">
     <h2>Response latency histogram</h2>
@@ -109,7 +93,7 @@ Here are some ideas of things you could try…
     Chart your own data using <a href="https://observablehq.com/framework/lib/plot"><code>Plot</code></a> and <a href="https://observablehq.com/framework/javascript/files"><code>FileAttachment</code></a>. Make it responsive using <a href="https://observablehq.com/framework/javascript/display#responsive-display"><code>resize</code></a>.
   </div>
   <div class="card">
-    Create a <a href="https://observablehq.com/framework/routing">new pindustry</a> by adding a Markdown file (<code>whatever.md</code>) to the <code>docs</code> folder.
+    Create a <a href="https://observablehq.com/framework/routing">new psector</a> by adding a Markdown file (<code>whatever.md</code>) to the <code>docs</code> folder.
   </div>
   <div class="card">
     Add a drop-down menu using <a href="https://observablehq.com/framework/javascript/inputs"><code>Inputs.select</code></a> and use it to filter the data shown in a chart.
