@@ -134,13 +134,13 @@ function rentChart(rent, width) {
 <div class="card">
   <h2>People earn very different amounts of money depending on what sector they work in</h2>
   <h3>How much income per year people reported earning in the 2022 American Community Survey, categorized by their sector of employment.</h3>
-  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/income-histogram-with-sector.sql">Code for data transform</a></code></h3>
+  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/figures/income-histogram-with-sector.sql">Code for data transform</a></code></h3>
   ${resize((width) => incomeChart(income, width))}
 </div>
 <div class="card">
   <h2>Households in different regions pay very different amounts of rent every month</h2>
   <h3>Monthly rent reported by households in the American Community Survey in 2022, categorized by region of the United States.</h3>
-  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/household-histogram-with-region.sql">Code for data transform</a></code></h3>
+  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/figures/public_use_microdata_sample/household-histogram-with-region.sql">Code for data transform</a></code></h3>
   ${resize((width) => rentChart(rent, width))}
 </div>
 <!-- </div> -->
