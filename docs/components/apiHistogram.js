@@ -2,7 +2,7 @@ import * as Plot from "npm:@observablehq/plot";
 import * as d3 from "npm:d3";
 // import {dy} from "./apiHeatmap.js";
 
-const dy = 300; // number of rows
+const dy = 400; // number of rows
 const marginTop = 0;
 const marginRight = 20;
 const marginBottom = 30;
@@ -29,7 +29,7 @@ export function ApiHistogram(
     style: "overflow: visible;",
     x: {type: "log", domain: [y1, y2 - 1], label},
     y: {axis: null, domain: [0, (height - marginTop - marginBottom) * ky], label: "requests"},
-    color: {label: color.label},
+    color: {label: color.label, legend: false},
     marks: [
       Plot.ruleY([0]),
       Plot.tip({length: 1}, {fill: [""], x: [y1], y: [0], format: {x: null, y: null}, render: renderTip})

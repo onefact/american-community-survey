@@ -60,7 +60,7 @@ import {ApiHistogram} from "./components/apiHistogram.js";
 
 ```js
 const incomeHistogram = FileAttachment("data/income-histogram.parquet").parquet();
-const histogramCanvas = document.createElement("canvas");
+const incomeCanvas = document.createElement("canvas");
 ```
 
 ```js
@@ -70,17 +70,30 @@ const sectorColor = Object.assign(Plot.scale({color: {domain: sectorColorMapping
 const sectorSwatch = (sector) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${sectorColor.apply(sector)}><rect width=10 height=10></rect></svg> <span class="small">${sector}</span></span>`;
 ```
 
+```js
+// Import the rent histogram data from the parquet file
+const rentHistogram = FileAttachment("data/rent-histogram.parquet").parquet();
+const rentCanvas = document.createElement("canvas");
+```
 
-<!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;"> -->
+```js
+// Create the color mapping for regions
+const regionColorMapping = d3.sort(d3.rollups(rentHistogram.getChild("region"), (D) => D.length, (d) => d).filter(([d]) => d), ([, d]) => -d).map(([region, count]) => ({ region, count }));
+const regionColor = Object.assign(Plot.scale({ color: { domain: regionColorMapping.map((d) => d.region) } }), {label: "region" });
+const regionSwatch = (region) => html`<span style="white-space: nowrap;"><svg width=10 height=10 fill=${regionColor.apply(region)}><rect width=10 height=10></rect></svg><span class="small">${region}</span></span>`;
+```
+
+
+<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
   <div class="card">
-    <h2>Income distribution by sector</h2>
-    ${resize((width) => ApiHistogram(incomeHistogram.getChild("income"), incomeHistogram.getChild("count"), incomeHistogram.getChild("sector"), {canvas: histogramCanvas, color: sectorColor, width, label: "Income ($)", y1: 1_000, y2: 200_000}))}
+    <h2>Income distribution by sector (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/income-histogram-with-sector.sql">code</a> for data transform)</h2>
+    ${resize((width) => ApiHistogram(incomeHistogram.getChild("income"), incomeHistogram.getChild("count"), incomeHistogram.getChild("sector"), {canvas: incomeCanvas, color: sectorColor, width, label: "Income ($)", y1: 1_000, y2: 200_000}))}
   </div>
-  <!-- <div class="card">
-    <h2>Response latency histogram</h2>
-    ${resize((width) => ApiHistogram(latencyHistogram.getChild("duration"), latencyHistogram.getChild("count"), latencyHistogram.getChild("route"), {canvas: histogramCanvas_new, color: routeColor, width, label: "Duration (ms)", y1: 0.5, y2: 10_000}))}
-  </div> -->
-<!-- </div> -->
+  <div class="card">
+    <h2>Rent Distribution by Region (<a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/household-histogram-with-region.sql">code</a> for data transform)</h2>
+    ${resize((width) => ApiHistogram(rentHistogram.getChild("rent"), rentHistogram.getChild("count"), rentHistogram.getChild("region"), {canvas: rentCanvas, color: regionColor, width, label: "Rent ($)", y1: 100, y2: 20_000 }))}
+  </div>
+</div>
 
 ---
 <!-- 
