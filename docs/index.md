@@ -140,12 +140,12 @@ function rentChart(rent, width) {
 <div class="card">
   <h2>Households in different regions pay very different amounts of rent every month</h2>
   <h3>Monthly rent reported by households in the American Community Survey in 2022, categorized by region of the United States.</h3>
-  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/figures/public_use_microdata_sample/household-histogram-with-region.sql">Code for data transform</a></code></h3>
+  <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/figures/household-histogram-with-region.sql">Code for data transform</a></code></h3>
   ${resize((width) => rentChart(rent, width))}
 </div>
 <!-- </div> -->
 
-<div class="small note">This page reenvisions the display of public data for the public good, and is part of an experiment in exploring urban non-private spaces with my partner. The Census Bureau states that "government agencies use these statistics to
+<div class="small note">This page reënvisions the display of public data for the public good, and is part of an experiment in exploring urban non-private spaces with my partner. The Census Bureau states that "government agencies use these statistics to
 help with decision-making and to allocate over
 $675 billion each year back to your community"; that "businesses use ACS estimates to inform important strategic decisionmaking" (<a href="https://www.census.gov/content/dam/Census/programs-surveys/acs/about/ACS_Information_Guide.pdf">source</a>); and, we know of several insurance companies, health systems, and real estate developers who also make use of this data for business purposes. 
 
