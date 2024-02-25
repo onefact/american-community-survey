@@ -1,4 +1,4 @@
-# Visualizing American Community Survey data
+# Visualizing two decades of American Community Survey data from the Census Bureau
 
 Visualizing American Community Survey data on people and households from the Census Bureau.
 
