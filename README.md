@@ -5,9 +5,9 @@ Visualizing American Community Survey data on people and households from the Cen
 Example visualization:
 * Demo: https://jaanli.github.io/american-community-survey/
 
-Screenshot:
+Or, 38 million Americans' income over 2 decades:
 
-<img width="977" alt="image" src="https://github.com/jaanli/american-community-survey/assets/5317244/b6c23933-fc08-4e02-a989-2b827b8f284f">
+![high_quality](https://github.com/jaanli/american-community-survey/assets/5317244/e54b7e83-b19e-46b6-b4a5-c861acc2d3c4)
 
 
 This is an [Observable Framework](https://observablehq.com/framework) project. To start the local preview server, run:
