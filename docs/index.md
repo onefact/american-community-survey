@@ -52,7 +52,6 @@ This is a testbed of visualizing the Census Bureau's American Community Survey d
 
 ```js
 const income = FileAttachment("data/income-histogram.parquet").parquet();
-const rent = FileAttachment("data/rent-histogram.parquet").parquet();
 ```
 
 ```js
@@ -90,6 +89,10 @@ function incomeChart(income, width) {
     ],
   });
 }
+```
+
+```js
+const rent = FileAttachment("data/rent-histogram.parquet").parquet();
 ```
 
 ```js
