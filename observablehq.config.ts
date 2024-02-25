@@ -64,7 +64,7 @@ export default {
   </svg>
   </a>
   <div style="display: flex; flex-grow: 1; justify-content: space-between; align-items: baseline;">
-    <a href="/">
+    <a href="/american-community-survey">
       <span class="hide-if-small">Visualizing the Census Bureau</span> American Community Survey
     </a>
     <span style="display: flex; align-items: baseline; gap: 0.5rem; font-size: 14px;">
