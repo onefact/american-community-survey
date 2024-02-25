@@ -67,7 +67,7 @@ function incomeChart(income, width) {
 
 <div class="card">
   <h2>The sectors in which people earn the most money have shifted over the past two decades</h2>
-  <h3>How much income per year people reported earning in the 2000–2022 American Community Surveys, categorized by their sector of employment.</h3>
+  <h3>How much income per year 38 million people reported earning in the 2000–2022 American Community Surveys run by the United States' Census Bureau, categorized by their sector of employment.</h3>
   <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/figures/income-histogram-with-sector-historical-inflation-adjusted-industry-mapped.sql">Code for data transform</a></code></h3>
   <div style="display: flex; align-items: center;">
   <h1 style="margin-top: 0.5rem;">${selectedYear}</h1>
