@@ -36,8 +36,8 @@ const orderSectors = await db.query(`
 ```
 
 ```js
-function incomeChart(db, selectedYear, width) {
-  const income = db.query(`
+async function incomeChart(db, selectedYear, width) {
+  const income = await db.query(`
   SELECT income, count, sector FROM data
   WHERE year = ${selectedYear}
   `); 
