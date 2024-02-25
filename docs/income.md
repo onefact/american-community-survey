@@ -4,11 +4,11 @@ toc: false
 
 ```js
 import {DuckDBClient} from "npm:@observablehq/duckdb";
-const db = DuckDBClient.of({income: FileAttachment("data/income-histogram-historical.parquet")});
+const db = DuckDBClient.of({data: FileAttachment("data/income-histogram-historical.parquet")});
 ```
 
 ```js
-const uniqueYears = await db.query("SELECT DISTINCT year FROM income ORDER BY year").then(data => data.map(d => d.year));
+const uniqueYears = await db.query("SELECT DISTINCT year FROM data ORDER BY year").then(data => data.map(d => d.year));
 const yearRange = [uniqueYears[0], uniqueYears[uniqueYears.length - 1]]; // Min and Max years
 const yearInput = Inputs.range(yearRange, {step: 1, value: 0, width: 150});
 const selectedYear = Generators.input(yearInput);
@@ -18,7 +18,7 @@ yearInput.querySelector("input[type=number]").remove();
 ```js
 const mostRecentYear = uniqueYears[uniqueYears.length - 1];
 const income = await db.query(`
-  SELECT income, count, sector FROM income
+  SELECT income, count, sector FROM data
   WHERE year = ${mostRecentYear}
 `); 
 ```
@@ -28,7 +28,7 @@ const income = await db.query(`
 const mostRecentYear = uniqueYears[uniqueYears.length - 1];
 const orderSectors = await db.query(`
   SELECT sector, SUM(income * count) / SUM(count) AS mean_income
-  FROM income
+  FROM data
   WHERE year = ${mostRecentYear}
   GROUP BY sector
   ORDER BY mean_income DESC
@@ -38,7 +38,7 @@ const orderSectors = await db.query(`
 ```js
 function incomeChart(db, selectedYear, width) {
   const income = db.query(`
-  SELECT income, count, sector FROM income
+  SELECT income, count, sector FROM data
   WHERE year = ${selectedYear}
   `); 
 
