@@ -33,7 +33,9 @@ const stateCodeToName = {
 
 // Fetch PUMA details, including state names based on the hardcoded map
 const pumaDetails = await db.query(`
-  SELECT DISTINCT puma, puma_name, state_code FROM data WHERE year = ${selectedYear}
+  SELECT DISTINCT puma, FIRST(puma_name) AS puma_name, state_code
+  FROM data
+  GROUP BY puma, state_code
 `).then(data => data.map(d => ({
   puma: d.puma,
   stateCode: d.state_code,
@@ -42,14 +44,12 @@ const pumaDetails = await db.query(`
 
 console.log("PUMA Details:", pumaDetails);
 
-// Sort pumaDetails alphabetically by state name and then by PUMA code
+// Sort pumaDetails alphabetically by state name and then by PUMA name
 pumaDetails.sort((a, b) => {
   const stateCompare = stateCodeToName[a.stateCode].localeCompare(stateCodeToName[b.stateCode]);
   if (stateCompare !== 0) return stateCompare;
-  return a.puma.localeCompare(b.puma);
+  return a.label.localeCompare(b.label);
 });
-
-console.log("Sorted PUMA Details:", pumaDetails);
 ```
 
 ```js
@@ -84,13 +84,23 @@ const income = await db.query(`
 `);
 ```
 
+<!-- ```js
+const medianIncome = await db.query(`
+  SELECT
+    quantile_cont(0.5) WITHIN GROUP (ORDER BY income) AS median_income
+  FROM data
+  WHERE year = ${selectedYear} AND puma = '${selectedPUMA}' AND state_code = '${selectedStateCode}';
+`);
+``` -->
+
 ```js
 function incomeChart(income, width) {
   // Create a histogram with a logarithmic base.
   return Plot.plot({
     width,
     marginLeft: 60,
-    x: { type: "log" },
+    x: { type: "log",       domain: [5000, 500000], // Set the domain of the x-axis to be fixed between 1000 and 500,000
+     },
     y: { axis: null }, // Hide the y-axis
     color: { legend: "swatches", columns: 6, domain: orderSectors },
     marks: [
@@ -110,6 +120,7 @@ function incomeChart(income, width) {
           }
         )
       ),
+      // Plot.ruleX([medianIncome], {stroke: "red", strokeWidth: 2})
     ],
   });
 }
