@@ -8,7 +8,7 @@ const db = DuckDBClient.of({data: FileAttachment("data/income-histogram-historic
 ```
 
 ```js
-const uniqueYears = await db.query("SELECT DISTINCT year FROM data WHERE year BETWEEN 2010 AND 2022 ORDER BY year").then(data => data.map(d => d.year));
+const uniqueYears = await db.query("SELECT DISTINCT year FROM data WHERE year BETWEEN 2005 AND 2022 ORDER BY year").then(data => data.map(d => d.year));
 const yearRange = [uniqueYears[0], uniqueYears[uniqueYears.length - 1]];
 const yearInput = Inputs.range(yearRange, {
   step: 1,
@@ -33,9 +33,8 @@ const stateCodeToName = {
 
 // Fetch PUMA details, including state names based on the hardcoded map
 const pumaDetails = await db.query(`
-  SELECT DISTINCT puma, FIRST(puma_name) AS puma_name, state_code
+  SELECT DISTINCT puma, puma_name, state_code
   FROM data
-  GROUP BY puma, state_code
 `).then(data => data.map(d => ({
   puma: d.puma,
   stateCode: d.state_code,
@@ -54,7 +53,7 @@ pumaDetails.sort((a, b) => {
 
 ```js
 const PUMAInput = Inputs.select(pumaDetails, {
-  label: "Select PUMA",
+  label: "Select area",
   value: d => d.puma,
   format: d => d.label
 });
@@ -128,8 +127,8 @@ function incomeChart(income, width) {
 
 <div class="card">
  <h2>The sectors in which people earn the most money shift across time and space</h2>
- <h3>How much income per year x million people reported earning in the 2010–2022 American Community Surveys run by the United States' Census Bureau, categorized by their sector of employment, specifically for areas overlapping with the New York-Newark-Jersey City core-based statistical area in 2020.</h3>
- <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/figures/income-histogram-with-sector-historical-inflation-adjusted-industry-mapped.sql">Code for data transform</a></code></h3>
+ <h3>How much income per year 15 million people reported earning in the 2005–2022 American Community Surveys run by the United States' Census Bureau, categorized by their sector of employment, specifically for areas overlapping with the New York-Newark-Jersey City core-based statistical area in 2020.</h3>
+ <h3><code style="font-size: 90%;"><a href="https://github.com/jaanli/exploring_american_community_survey_data/blob/main/american_community_survey/models/public_use_microdata_sample/figures/income-histogram-with-sector-historical-inflation-adjusted-industry-mapped-newyork-newark-cbsa.sql">Code for data transform</a></code></h3>
  <div style="display: flex; align-items: center;">
    <h1 style="margin-top: 0.5rem;">${selectedPUMADetails.label}</h1>
    ${PUMAInput}
