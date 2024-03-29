@@ -67,13 +67,6 @@ const selectedStateCode = selectedPUMADetails.stateCode;
 
 ```js
 const mostRecentYear = uniqueYears[uniqueYears.length - 1];
-const orderSectors = await db.query(`
-  SELECT sector, SUM(income * count) / SUM(count) AS mean_income
-  FROM data
-  WHERE year = ${mostRecentYear}
-  GROUP BY sector
-  ORDER BY mean_income DESC
-`).then(data => data.map(d => d.sector));
 ```
 
 ```js

@@ -86,8 +86,8 @@ const income = await db.query(`
 <!-- ```js
 const medianIncome = await db.query(`
   SELECT
-    quantile_cont(0.5) WITHIN GROUP (ORDER BY income) AS median_income
-  FROM data
+    percentile_cont(0.5) WITHIN GROUP (ORDER BY income) AS median_income
+  FROM data, generate_series(1, CAST(count AS INT))
   WHERE year = ${selectedYear} AND puma = '${selectedPUMA}' AND state_code = '${selectedStateCode}';
 `);
 ``` -->
@@ -119,7 +119,7 @@ function incomeChart(income, width) {
           }
         )
       ),
-      // Plot.ruleX([medianIncome], {stroke: "red", strokeWidth: 2})
+      // Plot.ruleX([medianIncome[0].median_income], {stroke: "red", strokeWidth: 2})
     ],
   });
 }

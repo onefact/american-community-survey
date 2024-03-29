@@ -11,7 +11,8 @@ export default {
       name: "Variables in the Survey",
       pages: [
         {name: "Income over the years", path: "/income"},
-        {name: "New York area income over the years", path: "/new-york-area"}
+        {name: "New York area income over the years", path: "/new-york-area"},
+        {name: "New York area income across time, space, and race", path: "/new-york-area/income-by-race"}
       ]
     }
   ],

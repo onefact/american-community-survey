@@ -65,3 +65,16 @@ A typical Framework project looks like this:
 ## GPT-4 reference
 
 https://chat.openai.com/share/0284945f-996d-4e62-85c5-bdc0f4e68e18
+
+## Making GIFs for demos
+
+1. Use Quicktime Player to record a screen recording.
+2. Use `ffmpeg` to trim the recording:
+```sh
+ffmpeg -ss 00:00:03 -to 00:00:08 -i recording.mov -c copy trimmed_recording.mov
+```
+3. Use `ffmpeg` to convert the trimmed recording to a GIF:
+```sh
+ffmpeg -i trimmed_recording.mov -vf "fps=20,scale=1080:-1:flags=lanczos,palettegen=stats_mode=diff" -y palette.png
+ffmpeg -i trimmed_recording.mov -i palette.png -filter_complex "fps=20,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" -y high_quality.gif
+```
