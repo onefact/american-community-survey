@@ -40,7 +40,7 @@ function incomeChart(income, width) {
   return Plot.plot({
     width,
     marginLeft: 60,
-    x: { type: "log" },
+    x: { type: "log", domain: [2_200, 1_000_000] },
     y: { axis: null }, // Hide the y-axis
     color: { legend: "swatches", columns: 6, domain: orderSectors },
     marks: [
@@ -55,8 +55,8 @@ function incomeChart(income, width) {
             order: orderSectors,
             thresholds: d3
               .ticks(Math.log10(2_000), Math.log10(1_000_000), 40)
-              .map((d) => +(10 ** d).toPrecision(3)),
-            tip: true,
+              .map((d) => 10 ** d),
+            tip: { format: { x: ",.3r" } }
           }
         )
       ),
