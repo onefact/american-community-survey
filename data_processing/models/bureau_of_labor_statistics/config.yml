@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: download_consumer_price_index
+    config:
+      output_path: "{{ var('output_path') }}"
+  - name: consumer_price_index
+    config:
+      output_path: "{{ var('output_path') }}"

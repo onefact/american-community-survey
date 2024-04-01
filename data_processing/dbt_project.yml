@@ -1,0 +1,47 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: "american_community_survey"
+version: "1.0.0"
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: "american_community_survey"
+
+# Variables that can be changed from the command line using the `--vars` flag:
+# example: dbt run --vars 'my_variable: my_value'
+vars:
+  # The URL of the American Community Survey PUMS data
+  public_use_microdata_sample_url: "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/"
+  public_use_microdata_sample_data_dictionary_url: "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv"
+  microdata_area_shapefile_url: "https://www2.census.gov/geo/tiger/TIGER2010/PUMA5/2010/" # https://www2.census.gov/geo/tiger/TIGER2010/PUMA5/2010/ # https://www2.census.gov/geo/tiger/TIGER2020/PUMA20/
+  output_path: "~/data/american_community_survey"
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets: # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  american_community_survey:
+    # Config indicated by + and applies to all files under models/example/
+    # example:
+    +materialized: view
+    public_use_microdata_sample:
+      generated:
+        +tags: "generated"

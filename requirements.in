@@ -1,0 +1,14 @@
+bs4
+duckdb
+dbt-duckdb
+pandas
+numpy
+matplotlib
+seaborn
+tqdm
+pyarrow
+sqlfluff
+ipykernel
+jupysql
+pip-tools
+duckdb-engine
