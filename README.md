@@ -93,14 +93,14 @@ Example plot of this data: https://s13.gifyu.com/images/SCGH2.gif (code here: ht
 
 Example visualization: live demo here - https://jaanli.github.io/american-community-survey/ (visualization code [here](https://github.com/jaanli/american-community-survey/))
 
-![image](https://github.com/jaanli/exploring_american_community_survey_data/assets/5317244/0428e121-c4ec-4a97-826f-d3f944bc7bf2)
+![image](https://github.com/jaanli/exploring_data_processing_data/assets/5317244/0428e121-c4ec-4a97-826f-d3f944bc7bf2)
 
 ## Requirements
 
 Clone the repo; create and activate a virtual environment:
 ```
-git clone https://github.com/jaanli/exploring_american_community_survey_data.git
-cd exploring_american_community_survey_data
+git clone https://github.com/jaanli/american-community-survey.git
+cd american-community-survey
 python3 -m venv .venv 
 source activate 
 ```
@@ -124,7 +124,7 @@ brew install duckdb
 
 To retrieve the list of URLs from the Census Bureau's server and download and extract the archives for all of the 50 states' PUMS files, run the following:
 ```
-cd american_community_survey
+cd data_processing
 dbt run --exclude "public_use_microdata_sample.generated+" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/", "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}'
 ```
 
@@ -144,7 +144,7 @@ dbt run --select "public_use_microdata_sample.generated+" --vars '{"public_use_m
 Inspect the output folder to see what has been created in the `output_path` specified in the previous command:
 ```
 ❯ tree -hF -I '*.pdf' ~/data/american_community_survey                
-[ 224]  /Users/me/data/american_community_survey/
+[ 224]  /Users/me/data/data_processing/
 ├── [ 128]  2022/
 │   └── [3.4K]  1-Year/
 │       ├── [ 128]  csv_hak/
@@ -169,7 +169,7 @@ To see the size of the csv output:
 
 ```
 ❯ du -sh ~/data/american_community_survey/2022
-6.4G    /Users/me/data/american_community_survey/2022
+6.4G    /Users/me/data/data_processing/2022
 ```
 
 And the compressed representation size:
@@ -278,12 +278,12 @@ Check that you can execute a SQL query against these files:
 ```
 duckdb -c "SELECT COUNT(*) FROM '~/data/american_community_survey/*individual_people_united_states*2021.parquet'"
 ```
-6. Create a data visualization using the compressed parquet files by adding to the `american_community_survey/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
+6. Create a data visualization using the compressed parquet files by adding to the `data_processing/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
 
-To save time, there is a bash script with these steps in `scripts/process_one_year_of_american_community_survey_data.sh` that can be used as follows:
+To save time, there is a bash script with these steps in `scripts/process_one_year_of_data_processing_data.sh` that can be used as follows:
 ```
-chmod a+x scripts/process_one_year_of_american_community_survey_data.sh
-./scripts/process_one_year_of_american_community_survey_data.sh 2021
+chmod a+x scripts/process_one_year_of_data_processing_data.sh
+./scripts/process_one_year_of_data_processing_data.sh 2021
 ```
 
 The argument specifies the year to be downloaded, transformed, compressed, and saved. It takes about 5 minutes per year of data.
@@ -564,7 +564,7 @@ dbt run --select "public_use_microdata_sample.microdata_area_shapefile_paths"
 ```
 5. Check that the paths are correct:
 ```
-❯ duckdb -c "SELECT * FROM '/Users/me/data/american_community_survey/microdata_area_shapefile_paths.parquet';"
+❯ duckdb -c "SELECT * FROM '/Users/me/data/data_processing/microdata_area_shapefile_paths.parquet';"
 ```
 Displays:
 
@@ -573,11 +573,11 @@ Displays:
 │                                          shp_path                                           │
 │                                           varchar                                           │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│ /Users/me/data/american_community_survey/PUMA5/2010/tl_2010_02_puma10/tl_2010_02_puma10.shp │
+│ /Users/me/data/data_processing/PUMA5/2010/tl_2010_02_puma10/tl_2010_02_puma10.shp │
 │                                              ·                                              │
 │                                              ·                                              │
 │                                              ·                                              │
-│ /Users/me/data/american_community_survey/PUMA5/2010/tl_2010_48_puma10/tl_2010_48_puma10.shp │
+│ /Users/me/data/data_processing/PUMA5/2010/tl_2010_48_puma10/tl_2010_48_puma10.shp │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                     54 rows (40 shown)                                      │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
