@@ -25,7 +25,7 @@ def model(dbt, session):
     base_url = dbt.config.get('public_use_microdata_sample_url')  # Assuming this is correctly set
 
     # Fetch URLs from your table or view
-    query = "SELECT * FROM list_urls"
+    query = "SELECT * FROM list_urls "
     result = session.execute(query).fetchall()
     columns = [desc[0] for desc in session.description]
     url_df = pd.DataFrame(result, columns=columns)
@@ -51,24 +51,3 @@ def model(dbt, session):
 
     # Return the DataFrame with paths to the extracted CSV files
     return paths_df
-
-# Mock dbt and session for demonstration; replace with actual dbt and session in your environment
-class MockDBT:
-    def config(self, key):
-        return {
-            'public_use_microdata_sample_url': 'https://example.com/path/to/your/csv/files',
-            'output_path': '~/path/to/your/output/directory'
-        }.get(key, '')
-
-class MockSession:
-    def execute(self, query):
-        # Mock response; replace with actual fetching logic
-        return [{"URL": "https://example.com/path/to/your/csv_file.zip"} for _ in range(10)]
-
-dbt = MockDBT()
-session = MockSession()
-
-if __name__ == "__main__":
-    # Directly calling model function for demonstration; integrate properly within your dbt project
-    df = model(dbt, session)
-    print(df)
