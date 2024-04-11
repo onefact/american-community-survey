@@ -247,6 +247,12 @@ duckdb -c "SELECT * FROM '~/data/american_community_survey/public_use_microdata_
 ```
 
 2. Parse the data dictionary:
+
+```bash
+python scripts/parse_data_dictionary.py https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv
+```
+
+Then:
 ```
 dbt run --select "public_use_microdata_sample.public_use_microdata_sample_data_dictionary_path" \
         --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' \
@@ -257,19 +263,19 @@ Check that the data dictionary path is displayed correctly:
 duckdb -c "SELECT * FROM '~/data/american_community_survey/public_use_microdata_sample_data_dictionary_path.parquet'"
 ```
 
-3. Generate the SQL commands needed to map every state's individual people or housing unit variables to the easier to use (and read) names:
+1. Generate the SQL commands needed to map every state's individual people or housing unit variables to the easier to use (and read) names:
 ```
 python scripts/generate_sql_with_enum_types_and_mapped_values_renamed.py \  
        ~/data/american_community_survey/public_use_microdata_sample_csv_paths.parquet \  
        ~/data/american_community_survey/PUMS_Data_Dictionary_2021.json
 ```
-4. Execute these generated SQL queries using 8 threads (you can adjust this number to be higher depending on the available processor cores on your system):
+1. Execute these generated SQL queries using 8 threads (you can adjust this number to be higher depending on the available processor cores on your system):
 ```
 dbt run --select "public_use_microdata_sample.generated.2021+" \
         --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' \
         --threads 8
 ```
-5. **Test** that the compressed parquet files are present and have the expected size:
+1. **Test** that the compressed parquet files are present and have the expected size:
 ```
 du -sh ~/data/american_community_survey/2021
 du -hc ~/data/american_community_survey/*2021.parquet
@@ -278,7 +284,7 @@ Check that you can execute a SQL query against these files:
 ```
 duckdb -c "SELECT COUNT(*) FROM '~/data/american_community_survey/*individual_people_united_states*2021.parquet'"
 ```
-6. Create a data visualization using the compressed parquet files by adding to the `american_community_survey/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
+1. Create a data visualization using the compressed parquet files by adding to the `american_community_survey/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
 
 To save time, there is a bash script with these steps in `scripts/process_one_year_of_american_community_survey_data.sh` that can be used as follows:
 ```
