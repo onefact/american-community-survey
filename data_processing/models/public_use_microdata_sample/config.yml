@@ -1,27 +1,31 @@
 version: 2
 
 models:
-  - name: list_urls
-    config:
-      public_use_microdata_sample_url: "{{ var('public_use_microdata_sample_url') }}"
-      output_path: "{{ var('output_path') }}"
-  - name: download_and_extract_archives
-    config:
-      public_use_microdata_sample_url: "{{ var('public_use_microdata_sample_url') }}"
-      output_path: "{{ var('output_path') }}"
-  - name: parse_data_dictionary
-    config:
-      public_use_microdata_sample_data_dictionary_url: "{{ var('public_use_microdata_sample_data_dictionary_url') }}"
-      output_path: "{{ var('output_path') }}"
-  - name: list_shapefile_urls
-    config:
-      microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
-      output_path: "{{ var('output_path') }}"
-  - name: download_and_extract_shapefiles
-    config:
-      microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
-      output_path: "{{ var('output_path') }}"
-  - name: combine_shapefiles
-    config:
-      microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
-      output_path: "{{ var('output_path') }}"
+- name: list_urls
+  config:
+    public_use_microdata_sample_url: "{{ var('public_use_microdata_sample_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: download_and_extract_archives
+  config:
+    public_use_microdata_sample_url: "{{ var('public_use_microdata_sample_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: csv_paths
+  config:
+    public_use_microdata_sample_url: "{{ var('public_use_microdata_sample_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: parse_data_dictionary
+  config:
+    public_use_microdata_sample_data_dictionary_url: "{{ var('public_use_microdata_sample_data_dictionary_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: list_shapefile_urls
+  config:
+    microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: download_and_extract_shapefiles
+  config:
+    microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
+    output_path: "{{ var('output_path') }}"
+- name: combine_shapefiles
+  config:
+    microdata_area_shapefile_url: "{{ var('microdata_area_shapefile_url') }}"
+    output_path: "{{ var('output_path') }}"

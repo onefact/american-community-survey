@@ -53,14 +53,14 @@ A typical Framework project looks like this:
 
 ## Command reference
 
-| Command           | Description                                              |
-| ----------------- | -------------------------------------------------------- |
-| `yarn install`            | Install or reinstall dependencies                        |
-| `yarn dev`        | Start local preview server                               |
-| `yarn build`      | Build your static site, generating `./dist`              |
-| `yarn deploy`     | Deploy your project to Observable                        |
-| `yarn clean`      | Clear the local data loader cache                        |
-| `yarn observable` | Run commands like `observable help`                      |
+| Command           | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `yarn install`    | Install or reinstall dependencies           |
+| `yarn dev`        | Start local preview server                  |
+| `yarn build`      | Build your static site, generating `./dist` |
+| `yarn deploy`     | Deploy your project to Observable           |
+| `yarn clean`      | Clear the local data loader cache           |
+| `yarn observable` | Run commands like `observable help`         |
 
 ## GPT-4 reference
 
@@ -93,14 +93,14 @@ Example plot of this data: https://s13.gifyu.com/images/SCGH2.gif (code here: ht
 
 Example visualization: live demo here - https://jaanli.github.io/american-community-survey/ (visualization code [here](https://github.com/jaanli/american-community-survey/))
 
-![image](https://github.com/jaanli/exploring_american_community_survey_data/assets/5317244/0428e121-c4ec-4a97-826f-d3f944bc7bf2)
+![image](https://github.com/jaanli/exploring_data_processing_data/assets/5317244/0428e121-c4ec-4a97-826f-d3f944bc7bf2)
 
 ## Requirements
 
 Clone the repo; create and activate a virtual environment:
 ```
-git clone https://github.com/jaanli/exploring_american_community_survey_data.git
-cd exploring_american_community_survey_data
+git clone https://github.com/jaanli/american-community-survey.git
+cd american-community-survey
 python3 -m venv .venv 
 source activate 
 ```
@@ -123,28 +123,62 @@ brew install duckdb
 ## Usage for 2022 ACS Public Use Microdata Sample (PUMS) Data
 
 To retrieve the list of URLs from the Census Bureau's server and download and extract the archives for all of the 50 states' PUMS files, run the following:
+
 ```
-cd american_community_survey
-dbt run --exclude "public_use_microdata_sample.generated+" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/", "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}'
+cd data_processing
+dbt run --select "public_use_microdata_sample.list_urls" \
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",            "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}'
+```
+
+Then save the URLs: 
+
+```
+dbt run --select "public_use_microdata_sample.urls" \                                                
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' \
+        --threads 8
+```
+
+Then execute the dbt model for downloading and extract the archives of the microdata (takes ~2min on a Macbook):
+
+```
+dbt run --select "public_use_microdata_sample.download_and_extract_archives" \                         
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}' \
+        --threads 8
+```
+
+Then generate the CSV paths:
+
+```
+dbt run --select "public_use_microdata_sample.csv_paths" \                            
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.json", "output_path": "~/data/american_community_survey"}' \
+        --threads 8
+```
+
+Then parse the data dictionary:
+
+```
+dbt run --select "public_use_microdata_sample.parse_data_dictionary" \
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' \
+        --threads 8
 ```
 
 Then generate the SQL commands needed to map every state's individual people or housing unit variables to the easier to use (and read) names:
 
 ```
-python scripts/generate_sql_data_dictionary_mapping_for_extracted_csv_files.py \
-  ~/data/american_community_survey/public_use_microdata_sample_csv_paths.parquet \
-  ~/data/american_community_survey/PUMS_Data_Dictionary_2022.json
+python scripts/generate_sql_with_enum_types_and_mapped_values_renamed.py ~/data/american_community_survey/csv_paths.parquet ~/data/american_community_survey/PUMS_Data_Dictionary_2022.json
 ```
 
 Then execute these generated SQL queries using 1 thread (you can adjust this number to be higher depending on the available processor cores on your system):
 ```
-dbt run --select "public_use_microdata_sample.generated+" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/", "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}' --threads 1
+dbt run --select "public_use_microdata_sample.generated+" \
+        --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/", "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}' \
+        --threads 8
 ```
 
 Inspect the output folder to see what has been created in the `output_path` specified in the previous command:
 ```
 ❯ tree -hF -I '*.pdf' ~/data/american_community_survey                
-[ 224]  /Users/me/data/american_community_survey/
+[ 224]  /Users/me/data/data_processing/
 ├── [ 128]  2022/
 │   └── [3.4K]  1-Year/
 │       ├── [ 128]  csv_hak/
@@ -169,7 +203,7 @@ To see the size of the csv output:
 
 ```
 ❯ du -sh ~/data/american_community_survey/2022
-6.4G    /Users/me/data/american_community_survey/2022
+6.4G    /Users/me/data/data_processing/2022
 ```
 
 And the compressed representation size:
@@ -284,12 +318,12 @@ Check that you can execute a SQL query against these files:
 ```
 duckdb -c "SELECT COUNT(*) FROM '~/data/american_community_survey/*individual_people_united_states*2021.parquet'"
 ```
-1. Create a data visualization using the compressed parquet files by adding to the `american_community_survey/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
+6. Create a data visualization using the compressed parquet files by adding to the `data_processing/models/public_use_microdata_sample/figures` directory, and using examples from here https://github.com/jaanli/american-community-survey/ or here https://github.com/jaanli/lonboard/blob/example-american-community-survey/examples/american-community-survey.ipynb
 
-To save time, there is a bash script with these steps in `scripts/process_one_year_of_american_community_survey_data.sh` that can be used as follows:
+To save time, there is a bash script with these steps in `scripts/process_one_year_of_data_processing_data.sh` that can be used as follows:
 ```
-chmod a+x scripts/process_one_year_of_american_community_survey_data.sh
-./scripts/process_one_year_of_american_community_survey_data.sh 2021
+chmod a+x scripts/process_one_year_of_data_processing_data.sh
+./scripts/process_one_year_of_data_processing_data.sh 2021
 ```
 
 The argument specifies the year to be downloaded, transformed, compressed, and saved. It takes about 5 minutes per year of data.
@@ -570,7 +604,7 @@ dbt run --select "public_use_microdata_sample.microdata_area_shapefile_paths"
 ```
 5. Check that the paths are correct:
 ```
-❯ duckdb -c "SELECT * FROM '/Users/me/data/american_community_survey/microdata_area_shapefile_paths.parquet';"
+❯ duckdb -c "SELECT * FROM '/Users/me/data/data_processing/microdata_area_shapefile_paths.parquet';"
 ```
 Displays:
 
@@ -579,11 +613,11 @@ Displays:
 │                                          shp_path                                           │
 │                                           varchar                                           │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│ /Users/me/data/american_community_survey/PUMA5/2010/tl_2010_02_puma10/tl_2010_02_puma10.shp │
+│ /Users/me/data/data_processing/PUMA5/2010/tl_2010_02_puma10/tl_2010_02_puma10.shp │
 │                                              ·                                              │
 │                                              ·                                              │
 │                                              ·                                              │
-│ /Users/me/data/american_community_survey/PUMA5/2010/tl_2010_48_puma10/tl_2010_48_puma10.shp │
+│ /Users/me/data/data_processing/PUMA5/2010/tl_2010_48_puma10/tl_2010_48_puma10.shp │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                     54 rows (40 shown)                                      │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘

@@ -1,12 +1,12 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: "american_community_survey"
+name: "data_processing"
 version: "1.0.0"
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: "american_community_survey"
+profile: "data_processing"
 
 # Variables that can be changed from the command line using the `--vars` flag:
 # example: dbt run --vars 'my_variable: my_value'
@@ -28,8 +28,8 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 clean-targets: # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
+- "target"
+- "dbt_packages"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -38,7 +38,7 @@ clean-targets: # directories to be removed by `dbt clean`
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
-  american_community_survey:
+  data_processing:
     # Config indicated by + and applies to all files under models/example/
     # example:
     +materialized: view

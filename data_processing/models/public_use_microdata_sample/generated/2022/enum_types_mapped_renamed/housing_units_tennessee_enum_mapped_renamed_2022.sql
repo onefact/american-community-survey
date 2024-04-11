@@ -905,7 +905,7 @@ CASE FYRBLTP
     WGTP78::VARCHAR AS "Housing Weight replicate 78",
     WGTP79::VARCHAR AS "Housing Weight replicate 79",
     WGTP80::VARCHAR AS "Housing Weight replicate 80",
-FROM read_csv('/Users/me/data/american_community_survey/2022/1-Year/csv_htn/psam_h47.csv', 
+FROM read_csv('~/data/american_community_survey/2022/1-Year/csv_htn/psam_h47.csv', 
               parallel=False,
               all_varchar=True,
               auto_detect=True)

@@ -4217,7 +4217,7 @@ CASE FYOEP
     PWGTP78::VARCHAR AS "Person's Weight replicate 78",
     PWGTP79::VARCHAR AS "Person's Weight replicate 79",
     PWGTP80::VARCHAR AS "Person's Weight replicate 80",
-FROM read_csv('/Users/me/data/american_community_survey/2022/1-Year/csv_pne/psam_p31.csv', 
+FROM read_csv('~/data/american_community_survey/2022/1-Year/csv_pne/psam_p31.csv', 
               parallel=False,
               all_varchar=True,
               auto_detect=True)
