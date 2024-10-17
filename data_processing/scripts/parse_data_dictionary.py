@@ -39,7 +39,7 @@ if __name__ == "__main__":
     data_dict = csv_to_json_dictionary(url)
 
     # Specify the JSON file name
-    json_file_name = "PUMS_Data_Dictionary.json"
+    json_file_name = "PUMS_Data_Dictionary_2023.json"
     with open(json_file_name, "w") as json_file:
         json.dump(data_dict, json_file, indent=4)
 

@@ -25,11 +25,12 @@ def model(dbt, session):
     base_url = dbt.config.get('public_use_microdata_sample_url')  # Assuming this is correctly set
 
     # Fetch URLs from your table or view
-    query = "SELECT * FROM list_urls "
-    result = session.execute(query).fetchall()
-    columns = [desc[0] for desc in session.description]
-    url_df = pd.DataFrame(result, columns=columns)
-
+    # query = "SELECT * FROM ref('list_urls')"
+    # result = session.execute(query).fetchall()
+    # columns = [desc[0] for desc in session.description]
+    # url_df = pd.DataFrame(result, columns=columns)
+    # load from parquet file in  ~/data/american_community_survey/urls.parquet
+    url_df = pd.read_parquet('~/data/american_community_survey/urls.parquet')
     # Determine the base directory for data storage
     base_path = os.path.expanduser(dbt.config.get('output_path'))
     base_dir = os.path.join(base_path, f'{base_url.rstrip("/").split("/")[-2]}/{base_url.rstrip("/").split("/")[-1]}')
@@ -50,4 +51,6 @@ def model(dbt, session):
     paths_df = pd.DataFrame(extracted_files, columns=['csv_path'])
 
     # Return the DataFrame with paths to the extracted CSV files
+    #save the paths to parquet file
+    paths_df.to_parquet('~/data/american_community_survey/csv_paths.parquet', index=False)
     return paths_df

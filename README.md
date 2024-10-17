@@ -121,25 +121,25 @@ For debugging, the `duckdb` command line tool is available on homebrew:
 brew install duckdb
 ```
 
-## Usage for 2022 ACS Public Use Microdata Sample (PUMS) Data
+## Usage for 2023 ACS Public Use Microdata Sample (PUMS) Data
 
 To retrieve the list of URLs from the Census Bureau's server and download and extract the archives for all of the 50 states' PUMS files, run the following:
 
 ```
 cd data_processing
-dbt run --select "public_use_microdata_sample.list_urls" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",            "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}'
+dbt run --select "public_use_microdata_sample.list_urls" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",            "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}'
 ```
 
 Then save the URLs: 
 
 ```
-dbt run --select "public_use_microdata_sample.urls" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.urls" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 
 Then execute the dbt model for downloading and extract the archives of the microdata (takes ~2min on a Macbook):
 
 ```
-dbt run --select "public_use_microdata_sample.download_and_extract_archives" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2022/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.download_and_extract_archives" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 
 Then generate the CSV paths:
@@ -259,26 +259,26 @@ duckdb -c "SELECT * FROM '~/data/american_community_survey/public_use_microdata_
 ```
 2. Download and extract the archives for all of the 50 states' PUMS files (takes about 30 seconds on a gigabit connection):
 ```
-dbt run --select "public_use_microdata_sample.download_and_extract_archives" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.download_and_extract_archives" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 Save the paths to the CSV files:
 ```
-dbt run --select "public_use_microdata_sample.public_use_microdata_sample_csv_paths" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.csv_paths" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 Check that the CSV files are present:
 ```
-duckdb -c "SELECT * FROM '~/data/american_community_survey/public_use_microdata_sample_csv_paths.parquet'"
+duckdb -c "SELECT * FROM '~/data/american_community_survey/csv_paths.parquet'"
 ```
 
 2. Parse the data dictionary:
 
 ```bash
-python scripts/parse_data_dictionary.py https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2022.csv
+python scripts/parse_data_dictionary.py https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv
 ```
 
 Then:
 ```
-dbt run --select "public_use_microdata_sample.public_use_microdata_sample_data_dictionary_path" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.data_dictionary_path" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 Check that the data dictionary path is displayed correctly:
 ```
@@ -287,13 +287,11 @@ duckdb -c "SELECT * FROM '~/data/american_community_survey/public_use_microdata_
 
 1. Generate the SQL commands needed to map every state's individual people or housing unit variables to the easier to use (and read) names:
 ```
-python scripts/generate_sql_with_enum_types_and_mapped_values_renamed.py \  
-       ~/data/american_community_survey/public_use_microdata_sample_csv_paths.parquet \  
-       ~/data/american_community_survey/PUMS_Data_Dictionary_2021.json
+python scripts/generate_sql_with_enum_types_and_mapped_values_renamed.py ~/data/american_community_survey/csv_paths.parquet PUMS_Data_Dictionary_2023.json
 ```
 1. Execute these generated SQL queries using 8 threads (you can adjust this number to be higher depending on the available processor cores on your system):
 ```
-dbt run --select "public_use_microdata_sample.generated.2021+" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2021/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2021.csv", "output_path": "~/data/american_community_survey"}' --threads 8
+dbt run --select "public_use_microdata_sample.generated.2023+" --vars '{"public_use_microdata_sample_url": "https://www2.census.gov/programs-surveys/acs/data/pums/2023/1-Year/",  "public_use_microdata_sample_data_dictionary_url": "https://www2.census.gov/programs-surveys/acs/tech_docs/pums/data_dict/PUMS_Data_Dictionary_2023.csv", "output_path": "~/data/american_community_survey"}' --threads 8
 ```
 1. **Test** that the compressed parquet files are present and have the expected size:
 ```

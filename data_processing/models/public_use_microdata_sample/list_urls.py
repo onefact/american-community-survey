@@ -1,5 +1,3 @@
-# models/list_acs_data_urls.py
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -21,6 +19,9 @@ def model(dbt, session):
     df = pd.DataFrame(csv_zip_urls, columns=['URL'])
 
     # For debugging
-    # print(df['URL'].values)
+    print(df['URL'].values)
+    
+    # save to parquet file
+    df.to_parquet('~/data/american_community_survey/urls.parquet', index=False)
     
     return df
