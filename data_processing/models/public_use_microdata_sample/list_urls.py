@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 def model(dbt, session):
+    # setting configuration
+    dbt.config(materialized="table")
+    
     # URL of the directory containing CSV files
     url = dbt.config.get('public_use_microdata_sample_url')
     # Send a GET request
